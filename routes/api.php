@@ -13,4 +13,4 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/', 'HomeController@action');
+Route::any('/', 'HomeController@action');
