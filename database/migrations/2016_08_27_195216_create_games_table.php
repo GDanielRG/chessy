@@ -19,8 +19,8 @@ class CreateGamesTable extends Migration
             $table->integer('team_id1')->unsigned();
             $table->integer('team_id2')->unsigned();
             $table->integer('turn')->unsigned()->nullable();
-            $table->boolean('ended')->default('false');
-            $table->boolean('started')->default('false');
+            $table->boolean('ended')->default(false);
+            $table->boolean('started')->default(false);
             $table->timestamps();
 
             $table->foreign('team_id1')->references('id')->on('teams');
