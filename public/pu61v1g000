@@ -1,0 +1,12 @@
+<style>
+td {text-align: center;
+height: 50px;
+width: 50px;
+font-size: 40px;
+}
+td.b{
+background-color:#987654;
+}
+td.w{
+background-color:#CBA987;
+}</style><table><tr><td class="w">&#9820;</td><td class="b">&#9822;</td><td class="w">&#9821;</td><td class="b">&#9819;</td><td class="w">&#9818;</td><td class="b">&#9821;</td><td class="w">&#9822;</td><td class="b">&#9820;</td></tr><tr><td class="b">&#9823;</td><td class="w">&#9823;</td><td class="b">&#9823;</td><td class="w">&#9823;</td><td class="b">&#9823;</td><td class="w">&#9823;</td><td class="b">&#9823;</td><td class="w">&#9823;</td></tr><tr><td class="w"></td><td class="b"></td><td class="w"></td><td class="b"></td><td class="w"></td><td class="b"></td><td class="w"></td><td class="b"></td></tr><tr><td class="b"></td><td class="w"></td><td class="b"></td><td class="w"></td><td class="b"></td><td class="w"></td><td class="b"></td><td class="w"></td></tr><tr><td class="w"></td><td class="b"></td><td class="w"></td><td class="b"></td><td class="w"></td><td class="b"></td><td class="w"></td><td class="b"></td></tr><tr><td class="b"></td><td class="w"></td><td class="b"></td><td class="w"></td><td class="b"></td><td class="w"></td><td class="b"></td><td class="w"></td></tr><tr><td class="w"><span style="color:white;">&#9823;</span></td><td class="b"><span style="color:white;">&#9823;</span></td><td class="w"><span style="color:white;">&#9823;</span></td><td class="b"><span style="color:white;">&#9823;</span></td><td class="w"><span style="color:white;">&#9823;</span></td><td class="b"><span style="color:white;">&#9823;</span></td><td class="w"><span style="color:white;">&#9823;</span></td><td class="b"><span style="color:white;">&#9823;</span></td></tr><tr><td class="b"><span style="color:white;">&#9820;</span></td><td class="w"><span style="color:white;">&#9822;</span></td><td class="b"><span style="color:white;">&#9821;</span></td><td class="w"><span style="color:white;">&#9819;</span></td><td class="b"><span style="color:white;">&#9818;</span></td><td class="w"><span style="color:white;">&#9821;</span></td><td class="b"><span style="color:white;">&#9822;</span></td><td class="w"><span style="color:white;">&#9820;</span></td></tr></table>
