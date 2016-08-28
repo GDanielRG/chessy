@@ -236,10 +236,10 @@ class HomeController extends Controller
             $movesVotes=[];
             foreach ($votes as $vote) {
                 if(!array_key_exists($vote->move, $movesVotes)){
-                    $movesVotes["'". $vote->move ."'"] = 1;
+                    $movesVotes[ $vote->move ] = 1;
                 }
                 else{
-                    $movesVotes["'".$vote->move."'"] = $movesVotes["'".$vote->move."'"] + 1;
+                    $movesVotes[$vote->move] = $movesVotes[$vote->move] + 1;
                 }
             }
             $higher=0;
@@ -250,12 +250,7 @@ class HomeController extends Controller
                     $higherMove = $key;
                 }
             }
-            \Log::info('move===' . $higherMove);
-            \Log::info('move===' . $chess->fen());
-            \Log::info('move===' . $chess->move($higherMove));
-            \Log::info('fen===' . $chess->fen());
-
-            $chess->move('e4');
+            $chess->move($higherMove);
             $game->fen=$chess->fen();
             $game->turn=$this->switchTurn($game);
             $game->save();
