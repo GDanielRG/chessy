@@ -119,9 +119,9 @@ class HomeController extends Controller
         $black=Team::where('id', $game->team_id1)->first();
         $white=Team::where('id', $game->team_id2)->first();
 
-        $teamUsers=teamUser::where("team_id", $black->id)->orWhere("team_id", $white->id)->get();
-        \Log::info($teamUsers);
-        $users=User::whereIn("id", $teamUsers->pluck('user_id'))->get();
+        $lobbyUsers=LobbyUser::where("game_id", $game->id)->get();
+        // \Log::info($lobbyUsers);
+        $users=User::whereIn("id", $lobbyUsers->pluck('user_id'))->get();
         $facebookIds=[];
         $slackIds=[];
         foreach ($users as $u) {
