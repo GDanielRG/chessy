@@ -15,7 +15,7 @@ class HomeController extends Controller
     {
         $name = $request->input('name');
         $image = $request->input('base64');
-        file_put_contents(url("/images" . "/" . $name ), base64_decode($base64));
+        file_put_contents(url("/images" . "/" . $name ), base64_decode($image));
         return response()->json([
             'created' => true,
         ]);
