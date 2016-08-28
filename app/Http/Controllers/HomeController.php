@@ -129,12 +129,6 @@ class HomeController extends Controller
                 $slackIds[]=$user->slack_key;
         }
 
-        return response()->json([
-            'text' => 'Game ' . $game->key . ' has started. White moves.',
-            'facebookIds' => $facebookIds,
-            'slackIds' => $slackIds,
-
-        ]);
 
         $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/sendMesagges')
         ->withData( array(  'text' =>  $user->key .' has joined your game loby.',
