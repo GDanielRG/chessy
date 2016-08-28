@@ -8,6 +8,7 @@ use App\Team;
 use App\Game;
 use App\LobbyUser;
 use App\TeamUser;
+use App\Movement;
 use Ryanhs\Chess\Chess;
 
 
@@ -229,7 +230,7 @@ class HomeController extends Controller
         ]);
 
         $movement=Movement::create(["move"=>$key, "game_id" => $game->id, "user_id" => $user->id, "team_id"=>$teamToPlay->id]);
-        $votes=Movements::where("game_id", $game->id, "team_id", $teamToPlay->id)->get();
+        $votes=Movement::where("game_id", $game->id, "team_id", $teamToPlay->id)->get();
         if($votes->count()>=(TeamUser::where("team_id")->get()->count / 2))
         {
             $movesVotes=[];
