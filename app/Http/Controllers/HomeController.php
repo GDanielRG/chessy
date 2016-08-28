@@ -370,6 +370,13 @@ class HomeController extends Controller
         width: 50px;
         font-size: 40px;
         }
+        td.num {text-align: right;
+        font-size: 15px;
+        }
+        td.letter{text-align: center;
+        font-size: 15px;
+        vertical-align: top;
+        }
         td.b{
         background-color:#987654;
         }
