@@ -388,11 +388,11 @@ class HomeController extends Controller
             $users=User::whereIn("id", $teamUsers->pluck('id'))->get();
             $facebookIds=[];
             $slackIds=[];
-            foreach ($users as $user) {
-                if($user->facebook_key)
-                    $facebookIds[]=$user->facebook_key;
-                if($user->slack_key)
-                    $slackIds[]=$user->slack_key;
+            foreach ($users as $ul) {
+                if($ul->facebook_key)
+                    $facebookIds[]=$ul->facebook_key;
+                if($ul->slack_key)
+                    $slackIds[]=$ul->slack_key;
             }
 
             // Dile a tu equipo el movimiento que hiciste
