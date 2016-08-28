@@ -7,6 +7,7 @@ use App\User;
 use App\Team;
 use App\Game;
 use App\LobbyUser;
+use App\TeamUser;
 
 class HomeController extends Controller
 {
@@ -37,6 +38,16 @@ class HomeController extends Controller
         if(substr($request->input('text'), 0, strlen('#join')) === "#join")
         {
             return $this->join($request);
+        }
+
+        if(substr($request->input('text'), 0, strlen('#side')) === "#side")
+        {
+            return $this->side($request);
+        }
+
+        if(substr($request->input('text'), 0, strlen('#start')) === "#start")
+        {
+            return $this->start($request);
         }
 
         $path = $this->generateImagePath("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
@@ -81,11 +92,88 @@ class HomeController extends Controller
                 'text' => 'Game does not exists',
             ]);
 
-        $lobbyUser = LobbyUser::create(["user_id"=> $user->id, "game_id" => $game->id]);
+        $lobbyUser = LobbyUser::firstOrCreate(["user_id"=> $user->id, "game_id" => $game->id]);
         $user->active_game = $game->id;
 
         return response()->json([
-            'text' => 'Game created. You are now on the lobby of the game ' . $game->key . " Your friends can join this game with #join {key}, and you can start picking a side with #side white or #side black",
+            'text' => 'You are now on the lobby of the game ' . $game->key . " Your friends can join this game with #join {key}, and you can start picking a side with #side white or #side black",
+        ]);
+
+    }
+
+    public function side(Request $request){
+        $user=$this->getUser($request);
+        if(!$user)
+            return response()->json([
+                'text' => 'User needs to register again',
+            ]);
+        $text = $request->input('text');
+        $key= explode(" ", $text)[1];
+        $game=Game::where('id', $user->active_game)->first();
+
+        if(!$game)
+            return response()->json([
+                'text' => 'Game does not exists',
+            ]);
+
+        $black=Team::where('id' , $game->team1)->first();
+        $white=Team::where('id' , $game->team2)->first();
+
+        if($key != "black" && $key != "white")
+        return response()->json([
+            'text' => 'Bad side',
+        ]);
+        if($key == "black")
+            $teamUser= TeamUser::firstOrCreate(["team_id"=>$black->id, "user_id" => $user->id]);
+        if($key == "white")
+            $teamUser= TeamUser::firstOrCreate(["team_id"=>$white->id, "user_id" => $user->id]);
+
+        return response()->json([
+            'text' => 'You are now on the  ' . $key . " team.",
+        ]);
+
+    }
+
+    public function start(Request $request){
+        $user=$this->getUser($request);
+        if(!$user)
+            return response()->json([
+                'text' => 'User needs to register again',
+            ]);
+        $game=Game::where('id', $user->active_game)->first();
+
+        if(!$game)
+            return response()->json([
+                'text' => 'Game does not exists',
+            ]);
+
+        if($game->started || $game->ended)
+        return response()->json([
+            'text' => 'Game cannot start',
+        ]);
+
+        $game->started=true;
+        $game->save();
+
+        $black=Team::where('id', $game->team1)->first();
+        $white=Team::where('id', $game->team2)->first();
+
+        $teamUsers=teamUser::where("team_id", $black->id)->orWhere("team_id", $white->id)->get();
+        $users=User::whereIn("id", $teamUsers->pluck('id'))->get();
+        $facebookIds=[];
+        $slackIds=[];
+        foreach ($users as $user) {
+            if($user->facebook_key)
+                $facebookIds[]=$user->facebook_key;
+            if($user->slack_key)
+                $slackIds[]=$user->slack_key;
+        }
+
+        return response()->json([
+            'text' => 'Game ' . $game->key . ' has started. White moves.',
+            'facebookIds' => $facebookIds,
+            'slackIds' => $slackIds,
+
         ]);
 
     }
