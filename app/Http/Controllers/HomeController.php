@@ -125,9 +125,11 @@ class HomeController extends Controller
             'text' => 'Bad side',
         ]);
         if($key == "black")
-            $teamUser= TeamUser::firstOrCreate(["team_id"=>$black->id, "user_id" => $user->id]);
+            $teamUser= TeamUser::firstOrCreate(["team_id"=>$black->id,
+            "user_id" => $user->id]);
         if($key == "white")
-            $teamUser= TeamUser::firstOrCreate(["team_id"=>$white->id, "user_id" => $user->id]);
+            $teamUser= TeamUser::firstOrCreate(["team_id"=>$white->id,
+            "user_id" => $user->id]);
 
         return response()->json([
             'text' => 'You are now on the  ' . $key . " team.",
