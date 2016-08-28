@@ -256,6 +256,10 @@ class HomeController extends Controller
             $game->turn=$this->switchTurn($game);
             $game->save();
 
+            foreach ($votes as $vote) {
+                $vote->delete();
+            }
+
             $black=Team::where('id', $game->team_id1)->first();
             $white=Team::where('id', $game->team_id2)->first();
 
