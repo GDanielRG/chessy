@@ -91,9 +91,30 @@ class HomeController extends Controller
         $user->save();
 
         $lobbyUser = LobbyUser::create(["user_id"=> $user->id, "game_id" => $game->id]);
-        return response()->json([
-            'text' => 'Game created. You are now on the lobby of the game ' . $game->key . " Your friends can join this game with #join {key}, and you can start picking a side with #side white or #side black",
-        ]);
+
+        $slackIds=[];
+        $facebookIds=[];
+
+        if($request->has('facebook'))
+        {
+            $facebookIds[]=$request->input('facebook');
+        }
+
+        if($request->has('slack'))
+        {
+            $slackIds[]=$request->input('slack');
+        }
+
+        $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+        ->withData( array(  'text' =>  'Game created. You are now on the lobby of the game ' . $game->key . " Your friends can join this game with #join {key}, and you can start picking a side with #side white or #side black",
+                            'facebookIds' => $facebookIds,
+                            'slackIds' => $slackIds ) )
+        ->asJson( true )
+        ->post();
+
+        // return response()->json([
+        //     'text' => 'Game created. You are now on the lobby of the game ' . $game->key . " Your friends can join this game with #join {key}, and you can start picking a side with #side white or #side black",
+        // ]);
 
     }
 
