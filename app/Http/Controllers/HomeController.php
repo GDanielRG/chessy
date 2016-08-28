@@ -4,16 +4,36 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Team;
+use App\Game;
+use App\LobbyUser;
 
 class HomeController extends Controller
 {
 
+    public function createImage(Request $request)
+    {
+        $name = $request->input('name');
+        $image = $request->input('base64');
+        file_put_contents(url("/images" . "/" . $name ), base64_decode($base64));
+        return response()->json([
+            'created' => true,
+        ]);
 
+    }
     public function action(Request $request){
+
+
         if(substr($request->input('text'), 0, strlen('#register')) === "#register")
         {
 
             return $this->register($request);
+        }
+
+        if(substr($request->input('text'), 0, strlen('#create')) === "#create")
+        {
+
+            return $this->quickplay($request);
         }
 
         $path = $this->generateImagePath("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
@@ -21,6 +41,26 @@ class HomeController extends Controller
         return response()->json([
             'image' => $path,
         ]);
+    }
+
+    public function quickplay(Request $request){
+            $user=$this->getUser($request);
+
+            if(!$user)
+                return response()->json([
+                    'text' => 'User needs to register again',
+                ]);
+
+            $team1 = Team::create(["key"=> base_convert(mt_rand (1, 1125899906842623), 10, 32), "color" => 'b']);
+            $team2 = Team::create(["key"=> base_convert(mt_rand (1, 1125899906842623), 10, 32), "color" => 'b']);
+            $game = Game::create(["creator"=>$user->id, "team_id1" => $team1->id, "team_id2" => $team2->id, "key"=> base_convert(mt_rand (1, 1125899906842623), 10, 32)]);
+            $user->active_game = $game->id;
+
+            $lobbyUser = LobbyUser::create(["user_id"=> $user->id, "game_id" => $game->id]);
+            return response()->json([
+                'text' => 'Game created. You are now on the lobby of the game ' . $game->key . " Your friends can join this game with #join {key}, and you can start picking a side with #side white or #side black",
+            ]);
+
     }
 
     public function register($request){
@@ -65,6 +105,21 @@ class HomeController extends Controller
                 'text' => 'User registered correctly, use this key to register on other platforms: ' . $key,
             ]);
         }
+    }
+
+    public function getUser($request)
+    {
+        if($request->has('facebook'))
+            $user =  User::where('facebook_key', $request->input('facebook'))->first();
+
+        if($request->has('slack'))
+            $user =  User::where('slack_key', $request->input('slack'))->first();
+
+        if($request->has('whatsapp'))
+            $user =  User::where('whatsapp_key', $request->input('whatsapp'))->first();
+
+        return $user;
+
     }
 
     public function generateImagePath($fenstr)

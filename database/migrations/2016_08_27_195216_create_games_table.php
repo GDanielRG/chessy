@@ -16,6 +16,7 @@ class CreateGamesTable extends Migration
         Schema::create('games', function (Blueprint $table) {
             $table->increments('id');
             $table->string('key')->unique();
+            $table->integer('creator')->unsigned();
             $table->integer('team_id1')->unsigned();
             $table->integer('team_id2')->unsigned();
             $table->integer('turn')->unsigned()->nullable();
@@ -23,6 +24,7 @@ class CreateGamesTable extends Migration
             $table->boolean('started')->default(false);
             $table->timestamps();
 
+            $table->foreign('creator')->references('id')->on('users');
             $table->foreign('team_id1')->references('id')->on('teams');
             $table->foreign('team_id2')->references('id')->on('teams');
             $table->foreign('turn')->references('id')->on('teams');

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMovementsTable extends Migration
+class CreateLobbyUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,15 @@ class CreateMovementsTable extends Migration
      */
     public function up()
     {
-        Schema::create('movements', function (Blueprint $table) {
+        Schema::create('game_user', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('move');
             $table->integer('game_id')->unsigned();
             $table->integer('user_id')->unsigned();
-            $table->integer('team_id')->unsigned();
             $table->timestamps();
 
             $table->foreign('game_id')->references('id')->on('games');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('team_id')->references('id')->on('teams');
+
         });
     }
 
@@ -34,6 +32,6 @@ class CreateMovementsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('movements');
+        Schema::drop('game_user');
     }
 }

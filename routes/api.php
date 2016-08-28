@@ -14,3 +14,4 @@ use Illuminate\Http\Request;
 */
 
 Route::any('/', 'HomeController@action');
+Route::post('/', 'HomeController@createImage');
