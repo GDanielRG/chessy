@@ -251,6 +251,7 @@ class HomeController extends Controller
                 }
             }
             \Log::info('move===' . $higherMove);
+            \Log::info('move===' . $chess->fen());
             \Log::info('move===' . $chess->move($higherMove));
             \Log::info('fen===' . $chess->fen());
 
