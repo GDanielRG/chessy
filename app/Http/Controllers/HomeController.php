@@ -16,7 +16,7 @@ class HomeController extends Controller
     {
         \Log::info($request);
         $name= base_convert(mt_rand (1, 1125899906842623), 10, 32) . ".html";
-        $path= public_path() . '\\' . $name;
+        $path= public_path() . '\\' . "images". '\\'. $name;
         $myfile = fopen($path, "w") or die("Unable to open file!");
         fwrite($myfile, $this->generateGrid());
         fclose($myfile);
@@ -25,7 +25,7 @@ class HomeController extends Controller
 
 
         return response()->json([
-            'path' => url("/" . $name ),
+            'path' => url("/images/" . $name ),
         ]);
 
     }
