@@ -260,6 +260,9 @@ class HomeController extends Controller
     public function generateGrid($fenstr){
         $fentable = explode("/", $fenstr);
         $htmlcontent =  "<style>
+        body{
+            display:inline-block !important;
+        }
         td {text-align: center;
         height: 50px;
         width: 50px;
@@ -274,7 +277,7 @@ class HomeController extends Controller
 
         $fentable = explode("/", $fenstr);
         $squarecont = 0;
-        $htmlcontent .= '<table>';
+        $htmlcontent .= '<table style="display:inline-block;">';
         for ($i = 0; $i < 8; $i++) {
         	$htmlcontent .= "<tr>";
         	$rest = 8;
