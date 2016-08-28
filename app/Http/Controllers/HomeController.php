@@ -213,7 +213,7 @@ class HomeController extends Controller
             ]);
 
         $teamToPlay= Team::find($game->turn);
-        if(playerColor($game, $user) != $teamToPlay->color)
+        if($this->playerColor($game, $user) != $teamToPlay->color)
         return response()->json([
             'text' => 'Cannot move',
         ]);
@@ -251,7 +251,7 @@ class HomeController extends Controller
             }
             $chess->move($higherMove);
             $game->fen=$chess->fen();
-            $game->turn=switchTurn($game);
+            $game->turn=$this->switchTurn($game);
             $game->save();
 
             $black=Team::where('id', $game->team_id1)->first();
