@@ -16,7 +16,13 @@ class HomeController extends Controller
     {
         $name = $request->input('name');
         $image = $request->input('base64');
-        file_put_contents("../../../images" . "/" . $name , base64_decode($image));
+        // file_put_contents("../../../images" . "/" . $name , base64_decode($image));
+
+        // $name= base_convert(mt_rand (1, 1125899906842623), 10, 32) . ".html";
+        $path= public_path() . '//'. "images/" . $name;
+        $myfile = fopen($path, "w") or die("Unable to open file!");
+        fwrite($myfile, $base64_decode($image));
+        fclose($myfile);
         return response()->json([
             'created' => true,
         ]);
