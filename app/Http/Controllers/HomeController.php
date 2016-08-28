@@ -279,7 +279,7 @@ class HomeController extends Controller
 
         $fentable = explode("/", $fenstr);
         $squarecont = 0;
-        $htmlcontent .= '<table style="display:inline-block;">';
+        $htmlcontent .= '<table style="width:100%; height:100%;">';
         for ($i = 0; $i < 8; $i++) {
         	$htmlcontent .= "<tr>";
         	$rest = 8;
@@ -321,13 +321,7 @@ class HomeController extends Controller
         	}
         	$htmlcontent .= "</tr>";
         }
-        $htmlcontent .= "</table> <script>
-
-            var x = document.getElementsByTagName(\"html\")[0];
-            var y = document.getElementsByTagName(\"table\")[0];
-            x.style.height = y.clientHeight;
-            x.style.width = y.clientWidth;
-        </script>";
+        $htmlcontent .= "</table>";
 
         return $htmlcontent;
     }
