@@ -250,6 +250,7 @@ class HomeController extends Controller
                     $higherMove = $key;
                 }
             }
+            \Log::info('move===' . $higherMove);
             $chess->move($higherMove);
             $game->fen=$chess->fen();
             $game->turn=$this->switchTurn($game);
