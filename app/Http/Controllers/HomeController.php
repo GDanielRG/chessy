@@ -115,6 +115,35 @@ class HomeController extends Controller
         $user->active_game = $game->id;
         $user->save();
 
+        $black=Team::where('id', $game->team_id1)->first();
+        $white=Team::where('id', $game->team_id2)->first();
+
+        $teamUsers=teamUser::where("team_id", $black->id)->orWhere("team_id", $white->id)->get();
+        $users=User::whereIn("id", $teamUsers->pluck('id'))->get();
+        $facebookIds=[];
+        $slackIds=[];
+        foreach ($users as $user) {
+            if($user->facebook_key)
+                $facebookIds[]=$user->facebook_key;
+            if($user->slack_key)
+                $slackIds[]=$user->slack_key;
+        }
+
+        return response()->json([
+            'text' => 'Game ' . $game->key . ' has started. White moves.',
+            'facebookIds' => $facebookIds,
+            'slackIds' => $slackIds,
+
+        ]);
+
+        $response = Curl::to('peaceful-badlands-59453.herokuapp.com/sendMesagges')
+        ->withData( array(  'text' =>  $user->key .' has joined your game loby.',
+                            'facebookIds' => $facebookIds,
+                            'slackIds' => $slackIds ) )
+        ->asJson( true )
+        ->post();
+
+
         return response()->json([
             'text' => 'You are now on the lobby of the game ' . $game->key . " Your friends can join this game with #join {key}, and you can start picking a side with #side white or #side black",
         ]);
@@ -149,6 +178,31 @@ class HomeController extends Controller
         if($key == "white")
             $teamUser= TeamUser::firstOrCreate(["team_id"=>$white->id,
             "user_id" => $user->id]);
+
+        if($key == "black")
+            $teamUsers=teamUser::where("team_id", $black->id)->get();
+        if($key == "white")
+            $teamUsers=teamUser::where("team_id", $white->id)->get();
+
+
+        $users=User::whereIn("id", $teamUsers->pluck('id'))->get();
+        $facebookIds=[];
+        $slackIds=[];
+        foreach ($users as $user) {
+            if($user->facebook_key)
+                $facebookIds[]=$user->facebook_key;
+            if($user->slack_key)
+                $slackIds[]=$user->slack_key;
+        }
+
+        //envia a todos los companeros del equipo KEY que tal persona se unio al equipo
+        $response = Curl::to('peaceful-badlands-59453.herokuapp.com/sendMesagges')
+            ->withData( array(  'text' =>  $user->key .' has joined ' . $key . '\'s team.',
+                                'facebookIds' => $facebookIds,
+                                'slackIds' => $slackIds ) )
+            ->asJson( true )
+            ->post();
+
 
         return response()->json([
             'text' => 'You are now on the  ' . $key . " team.",
@@ -287,6 +341,36 @@ class HomeController extends Controller
             ]);
         }
         else{
+
+            if ( $teamToPlay->color == "b") {
+                $black=Team::where('id', $game->team_id1)->first();
+                $teamUsers=teamUser::where("team_id", $black->id)->get();
+            }
+            else {
+                $white=Team::where('id', $game->team_id2)->first();
+                $teamUsers=teamUser::where("team_id", $white->id)->get();
+            }
+
+            $users=User::whereIn("id", $teamUsers->pluck('id'))->get();
+            $facebookIds=[];
+            $slackIds=[];
+            foreach ($users as $user) {
+                if($user->facebook_key)
+                    $facebookIds[]=$user->facebook_key;
+                if($user->slack_key)
+                    $slackIds[]=$user->slack_key;
+            }
+
+            // Dile a tu equipo el movimiento que hiciste
+            $response = Curl::to('peaceful-badlands-59453.herokuapp.com/sendMesagges')
+            ->withData( array(  'text' =>  $user->key .' has voted ' . $key ,
+                                'facebookIds' => $facebookIds,
+                                'slackIds' => $slackIds ) )
+            ->asJson( true )
+            ->post();
+
+
+
             return response()->json([
                 'text' => 'Vote added.',
             ]);

@@ -15,4 +15,4 @@
 
 Auth::routes();
 
-// Route::get('/api', 'HomeController@index');
+Route::get('/wregister', 'WhatsappController@codeRegister');
