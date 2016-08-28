@@ -180,6 +180,7 @@ class HomeController extends Controller
 
 
         $users=User::whereIn("id", $teamUsers->pluck('user_id'))->get();
+        \Log::info(print_r($users));
         $facebookIds=[];
         $slackIds=[];
         foreach ($users as $u) {
