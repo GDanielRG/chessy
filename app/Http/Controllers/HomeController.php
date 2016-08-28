@@ -121,7 +121,7 @@ class HomeController extends Controller
 
         $teamUsers=teamUser::where("team_id", $black->id)->orWhere("team_id", $white->id)->get();
         $users=User::whereIn("id", $teamUsers->pluck('user_id'))->get();
-        \Log::info(print_r($users));
+        \Log::info($users);
         $facebookIds=[];
         $slackIds=[];
         foreach ($users as $u) {
