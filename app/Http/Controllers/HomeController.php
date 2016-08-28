@@ -119,14 +119,14 @@ class HomeController extends Controller
         $white=Team::where('id', $game->team_id2)->first();
 
         $teamUsers=teamUser::where("team_id", $black->id)->orWhere("team_id", $white->id)->get();
-        $users=User::whereIn("id", $teamUsers->pluck('id'))->get();
+        $users=User::whereIn("id", $teamUsers->pluck('user_id'))->get();
         $facebookIds=[];
         $slackIds=[];
-        foreach ($users as $user) {
-            if($user->facebook_key)
-                $facebookIds[]=$user->facebook_key;
-            if($user->slack_key)
-                $slackIds[]=$user->slack_key;
+        foreach ($users as $u) {
+            if($u->facebook_key)
+                $facebookIds[]=$u->facebook_key;
+            if($u->slack_key)
+                $slackIds[]=$u->slack_key;
         }
 
 
@@ -311,14 +311,14 @@ class HomeController extends Controller
             $white=Team::where('id', $game->team_id2)->first();
 
             $teamUsers=teamUser::where("team_id", $black->id)->orWhere("team_id", $white->id)->get();
-            $users=User::whereIn("id", $teamUsers->pluck('id'))->get();
+            $users=User::whereIn("id", $teamUsers->pluck('user_id'))->get();
             $facebookIds=[];
             $slackIds=[];
-            foreach ($users as $user) {
-                if($user->facebook_key)
-                    $facebookIds[]=$user->facebook_key;
-                if($user->slack_key)
-                    $slackIds[]=$user->slack_key;
+            foreach ($users as $u) {
+                if($u->facebook_key)
+                    $facebookIds[]=$u->facebook_key;
+                if($u->slack_key)
+                    $slackIds[]=$u->slack_key;
             }
 
             $path = $this->generateImagePath($game->fen);
