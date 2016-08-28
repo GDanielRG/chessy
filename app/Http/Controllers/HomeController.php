@@ -182,11 +182,11 @@ class HomeController extends Controller
         $users=User::whereIn("id", $teamUsers->pluck('user_id'))->get();
         $facebookIds=[];
         $slackIds=[];
-        foreach ($users as $user) {
-            if($user->facebook_key)
-                $facebookIds[]=$user->facebook_key;
-            if($user->slack_key)
-                $slackIds[]=$user->slack_key;
+        foreach ($users as $u) {
+            if($u->facebook_key)
+                $facebookIds[]=$u->facebook_key;
+            if($u->slack_key)
+                $slackIds[]=$u->slack_key;
         }
 
         //envia a todos los companeros del equipo KEY que tal persona se unio al equipo
