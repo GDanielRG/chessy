@@ -190,7 +190,7 @@ class HomeController extends Controller
 
 
         return  \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
-        ->withData( array(  'text' =>  $user->key .' has joined your game loby.',
+        ->withData( array(  'text' =>  $user->key .' has joined your game lobby.',
                             'facebookIds' => $facebookIds,
                             'slackIds' => $slackIds ) )
         ->asJson( true )
