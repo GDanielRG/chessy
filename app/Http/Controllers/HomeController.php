@@ -3,33 +3,82 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\User;
 
 class HomeController extends Controller
 {
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function action(Request $request)
-    {
-        \Log::info($request);
-        $name= base_convert(mt_rand (1, 1125899906842623), 10, 32) . ".html";
-        echo('name= ' . $name);
-        $path= public_path() . '//'. "images/" . $name;
-        $myfile = fopen($path, "w") or die("Unable to open file!");
-        fwrite($myfile, $this->generateGrid());
-        fclose($myfile);
 
+    public function action(Request $request){
+        if(substr($request->input('text'), 0, strlen('#register')) === "#register")
+        {
+
+            return $this->register($request);
+        }
+
+        $path = $this->generateImagePath("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
 
         return response()->json([
-            'path' => url("/images" . "/" . $name ),
+            'image' => $path,
         ]);
     }
 
-    public function generateGrid(){
-        $fenstr = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+    public function register($request){
+        $text = $request->input('text');
+        $key= explode(" ", $text)[1];
+        $user=User::where('key', $key)->first();
+
+        if($user)
+        {
+            if($request->has('facebook'))
+                $user->facebook_key= $request->input('facebook');
+
+            if($request->has('slack'))
+                $user->slack_key= $request->input('slack');
+
+            if($request->has('whatsapp'))
+                $user->whatsapp_key= $request->input('whatsapp');
+
+            $user->save();
+
+            return response()->json([
+                'text' => 'User added to' . $key
+            ]);
+        }
+        else{
+
+            $user = new User;
+            $user->key = $key;
+
+            if($request->has('facebook'))
+                $user->facebook_key=$request->input('facebook');
+
+            if($request->has('slack'))
+                $user->slack_key=$request->input('slack');
+
+            if($request->has('whatsapp'))
+                $user->whatsapp_key=$request->input('whatsapp');
+
+            $user->save();
+
+            return response()->json([
+                'text' => 'User registered correctly, use this key to register on other platforms: ' . $key,
+            ]);
+        }
+    }
+
+    public function generateImagePath($fenstr)
+    {
+        $name= base_convert(mt_rand (1, 1125899906842623), 10, 32) . ".html";
+        $path= public_path() . '//'. "images/" . $name;
+        $myfile = fopen($path, "w") or die("Unable to open file!");
+        fwrite($myfile, $this->generateGrid($fenstr));
+        fclose($myfile);
+
+        return url("/images" . "/" . $name );
+    }
+
+    public function generateGrid($fenstr){
         $fentable = explode("/", $fenstr);
         $htmlcontent =  "<style>
         td {text-align: center;
