@@ -92,7 +92,7 @@ class HomeController extends Controller
             //     'text' => 'User needs to register again',
             // ]);
 
-            $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+            return  \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
             ->withData( array(  'text' =>  'User needs to register again',
                                 'facebookIds' => $facebookIds,
                                 'slackIds' => $slackIds ) )
@@ -113,7 +113,7 @@ class HomeController extends Controller
         $lobbyUser = LobbyUser::create(["user_id"=> $user->id, "game_id" => $game->id]);
 
 
-        $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+        return  \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
         ->withData( array(  'text' =>  'Game created. You are now on the lobby of the game ' . $game->key . " Your friends can join this game with #join {key}, and you can start picking a side with #side white or #side black",
                             'facebookIds' => $facebookIds,
                             'slackIds' => $slackIds ) )
@@ -147,7 +147,7 @@ class HomeController extends Controller
             //     'text' => 'User needs to register again',
             // ]);
 
-            $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+            return  \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
             ->withData( array(  'text' =>  'User needs to register again',
                                 'facebookIds' => $facebookIds,
                                 'slackIds' => $slackIds ) )
@@ -162,7 +162,7 @@ class HomeController extends Controller
             //     'text' => 'Game does not exists',
             // ]);
 
-            $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+            return  \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
             ->withData( array(  'text' =>  'Game does not exists',
                                 'facebookIds' => $facebookIds,
                                 'slackIds' => $slackIds ) )
@@ -189,7 +189,7 @@ class HomeController extends Controller
         }
 
 
-        $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+        return  \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
         ->withData( array(  'text' =>  $user->key .' has joined your game loby.',
                             'facebookIds' => $facebookIds,
                             'slackIds' => $slackIds ) )
@@ -223,7 +223,7 @@ class HomeController extends Controller
             // return response()->json([
             //     'text' => 'User needs to register again',
             // ]);
-            $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+            return  \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
             ->withData( array(  'text' =>  'User needs to register again',
                                 'facebookIds' => $facebookIds,
                                 'slackIds' => $slackIds ) )
@@ -245,7 +245,7 @@ class HomeController extends Controller
         // return response()->json([
         //     'text' => 'Bad side',
         // ]);
-        $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+        return  \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
         ->withData( array(  'text' =>  'Bad side',
                             'facebookIds' => $facebookIds,
                             'slackIds' => $slackIds ) )
@@ -277,7 +277,7 @@ class HomeController extends Controller
         }
 
         //envia a todos los companeros del equipo KEY que tal persona se unio al equipo
-        $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+        return  \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
             ->withData( array(  'text' =>  $user->key .' has joined ' . $key . '\'s team.',
                                 'facebookIds' => $facebookIds,
                                 'slackIds' => $slackIds ) )
@@ -311,7 +311,7 @@ class HomeController extends Controller
             // return response()->json([
             //     'text' => 'User needs to register again',
             // ]);
-            $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+            return  \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
                 ->withData( array(  'text' =>  'User needs to register again',
                                     'facebookIds' => $facebookIds,
                                     'slackIds' => $slackIds ) )
@@ -323,7 +323,7 @@ class HomeController extends Controller
             // return response()->json([
             //     'text' => 'Game does not exists',
             // ]);
-            $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+            return  \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
                 ->withData( array(  'text' =>  'Game does not exists',
                                     'facebookIds' => $facebookIds,
                                     'slackIds' => $slackIds ) )
@@ -334,7 +334,7 @@ class HomeController extends Controller
         // return response()->json([
         //     'text' => 'Game cannot start',
         // ]);
-        $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+        return  \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
             ->withData( array(  'text' =>  'Game cannot start',
                                 'facebookIds' => $facebookIds,
                                 'slackIds' => $slackIds ) )
@@ -365,7 +365,7 @@ class HomeController extends Controller
         //
         // ]);
 
-        $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+        return  \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
             ->withData( array(  'text' =>  'Game ' . $game->key . ' has started. White moves.',
                                 'facebookIds' => $facebookIds,
                                 'slackIds' => $slackIds ) )
@@ -393,7 +393,7 @@ class HomeController extends Controller
             // return response()->json([
             //     'text' => 'User needs to register again',
             // ]);
-            $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+            return  \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
                 ->withData( array(  'text' =>  'User needs to register again',
                                     'facebookIds' => $facebookIds,
                                     'slackIds' => $slackIds ) )
@@ -405,7 +405,7 @@ class HomeController extends Controller
             // return response()->json([
             //     'text' => 'Game does not exists',
             // ]);
-            $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+            return  \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
                 ->withData( array(  'text' =>  'Game does not exists',
                                     'facebookIds' => $facebookIds,
                                     'slackIds' => $slackIds ) )
@@ -417,7 +417,7 @@ class HomeController extends Controller
         // return response()->json([
         //     'text' => 'Cannot move',
         // ]);
-        $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+        return  \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
             ->withData( array(  'text' =>  'Cannot move',
                                 'facebookIds' => $facebookIds,
                                 'slackIds' => $slackIds ) )
@@ -433,7 +433,7 @@ class HomeController extends Controller
         // return response()->json([
         //     'text' => 'Invalid move',
         // ]);
-        $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+        return  \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
             ->withData( array(  'text' =>  'Invalid move',
                                 'facebookIds' => $facebookIds,
                                 'slackIds' => $slackIds ) )
@@ -490,7 +490,7 @@ class HomeController extends Controller
                 $color = 'white\'s';
 
 
-            $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+            return  \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
             ->withData( array(  'text' => 'It\'s ' . $color . ' turn.' ,
                                 'facebookIds' => $facebookIds,
                                 'slackIds' => $slackIds,
@@ -527,7 +527,7 @@ class HomeController extends Controller
             }
 
             // Dile a tu equipo el movimiento que hiciste
-            $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+            return  \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
             ->withData( array(  'text' =>  $user->key .' has voted ' . $key ,
                                 'facebookIds' => $facebookIds,
                                 'slackIds' => $slackIds ) )
@@ -577,7 +577,7 @@ class HomeController extends Controller
             // return response()->json([
             //     'text' => 'User added to' . $key
             // ]);
-            $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+            return  \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
                 ->withData( array(  'text' =>  'User added to ' . $key,
                                     'facebookIds' => $facebookIds,
                                     'slackIds' => $slackIds ) )
@@ -608,7 +608,7 @@ class HomeController extends Controller
 
             $user->save();
 
-            $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+            return  \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
             ->withData( array(  'text' =>  'User registered correctly, use this key to register on other platforms: ' . $key,
                                 'facebookIds' => $facebookIds,
                                 'slackIds' => $slackIds ) )
