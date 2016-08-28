@@ -418,21 +418,36 @@ class HomeController extends Controller
 
             $user = new User;
             $user->key = $key;
+            $slackIds=[];
+            $facebookIds=[];
 
             if($request->has('facebook'))
+            {
                 $user->facebook_key=$request->input('facebook');
+                $facebookIds[]=$request->input('facebook');
+            }
 
             if($request->has('slack'))
+            {
                 $user->slack_key=$request->input('slack');
+                $slackIds[]=$request->input('slack');
+            }
 
             if($request->has('whatsapp'))
                 $user->whatsapp_key=$request->input('whatsapp');
 
             $user->save();
 
-            return response()->json([
-                'text' => 'User registered correctly, use this key to register on other platforms: ' . $key,
-            ]);
+            $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+            ->withData( array(  'text' =>  'User registered correctly, use this key to register on other platforms: ' . $key,
+                                'facebookIds' => $facebookIds,
+                                'slackIds' => $slackIds ) )
+            ->asJson( true )
+            ->post();
+
+            // return response()->json([
+            //     'text' => 'User registered correctly, use this key to register on other platforms: ' . $key,
+            // ]);
         }
     }
 
