@@ -136,7 +136,7 @@ class HomeController extends Controller
 
         ]);
 
-        $response = Curl::to('peaceful-badlands-59453.herokuapp.com/sendMesagges')
+        $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/sendMesagges')
         ->withData( array(  'text' =>  $user->key .' has joined your game loby.',
                             'facebookIds' => $facebookIds,
                             'slackIds' => $slackIds ) )
@@ -196,7 +196,7 @@ class HomeController extends Controller
         }
 
         //envia a todos los companeros del equipo KEY que tal persona se unio al equipo
-        $response = Curl::to('peaceful-badlands-59453.herokuapp.com/sendMesagges')
+        $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/sendMesagges')
             ->withData( array(  'text' =>  $user->key .' has joined ' . $key . '\'s team.',
                                 'facebookIds' => $facebookIds,
                                 'slackIds' => $slackIds ) )
@@ -362,7 +362,7 @@ class HomeController extends Controller
             }
 
             // Dile a tu equipo el movimiento que hiciste
-            $response = Curl::to('peaceful-badlands-59453.herokuapp.com/sendMesagges')
+            $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/sendMesagges')
             ->withData( array(  'text' =>  $user->key .' has voted ' . $key ,
                                 'facebookIds' => $facebookIds,
                                 'slackIds' => $slackIds ) )
