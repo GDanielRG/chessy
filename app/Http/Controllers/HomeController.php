@@ -231,8 +231,8 @@ class HomeController extends Controller
 
         $movement=Movement::create(["move"=>$key, "game_id" => $game->id, "user_id" => $user->id, "team_id"=>$teamToPlay->id]);
         $votes=Movement::where("game_id", $game->id)->where("team_id", $teamToPlay->id)->get();
-        if($votes->count()>(TeamUser::where("team_id", $teamToPlay->id)->get()->count() / 2)
-        ||( $votes->count()==1 && TeamUser::where("team_id", $teamToPlay->id)->get()->count() / 2)==1  )
+        if($votes->count()>(TeamUser::where("team_id", $teamToPlay->id)->get()->count() / 2) ||($votes->count()==1 && TeamUser::where("team_id", $teamToPlay->id)->get()->count()==1))
+
         {
             $movesVotes=[];
             foreach ($votes as $vote) {
@@ -255,11 +255,9 @@ class HomeController extends Controller
             $game->fen=$chess->fen();
             $game->turn=$this->switchTurn($game);
             $game->save();
-
             foreach ($votes as $vote) {
                 $vote->delete();
             }
-
             $black=Team::where('id', $game->team_id1)->first();
             $white=Team::where('id', $game->team_id2)->first();
 
