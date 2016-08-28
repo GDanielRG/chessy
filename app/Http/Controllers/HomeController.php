@@ -383,7 +383,7 @@ class HomeController extends Controller
         $squarecont = 0;
         $htmlcontent .= '<table style="width:100%; height:100%;">';
         for ($i = 0; $i < 8; $i++) {
-        	$htmlcontent .= "<tr>";
+            $htmlcontent .= '<tr><td class="num">' . (8 - $i) . "</td>";
         	$rest = 8;
         	for ($j = 0; $j < $rest; $j++) {
         		if(is_numeric($fentable[$i][$j])){
@@ -423,7 +423,11 @@ class HomeController extends Controller
         	}
         	$htmlcontent .= "</tr>";
         }
-        $htmlcontent .= "</table>";
+        $htmlcontent .= "<tr><td></td>";
+for ($i = 0; $i < 8; $i++) {
+	$htmlcontent .= '<td class="letter">' . getLetter($i) . "</td>";
+}
+        $htmlcontent .= "</tr></table>";
 
         return $htmlcontent;
     }
@@ -468,6 +472,20 @@ class HomeController extends Controller
     			break;
     	}
     }
+
+    function getLetter($n){
+	switch($n){
+		case 0: return "a";
+		case 1: return "b";
+		case 2: return "c";
+		case 3: return "d";
+		case 4: return "e";
+		case 5: return "f";
+		case 6: return "g";
+		case 7: return "h";
+	}
+}
+
 
 
     public function playerColor($game, $user)
