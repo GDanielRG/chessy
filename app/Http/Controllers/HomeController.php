@@ -201,9 +201,9 @@ class HomeController extends Controller
             ->post();
 
 
-        return response()->json([
-            'text' => 'You are now on the  ' . $key . " team.",
-        ]);
+        // return response()->json([
+        //     'text' => 'You are now on the  ' . $key . " team.",
+        // ]);
 
     }
 
@@ -242,12 +242,20 @@ class HomeController extends Controller
                 $slackIds[]=$u->slack_key;
         }
 
-        return response()->json([
-            'text' => 'Game ' . $game->key . ' has started. White moves.',
-            'facebookIds' => $facebookIds,
-            'slackIds' => $slackIds,
+        // return response()->json([
+        //     'text' => 'Game ' . $game->key . ' has started. White moves.',
+        //     'facebookIds' => $facebookIds,
+        //     'slackIds' => $slackIds,
+        //
+        // ]);
 
-        ]);
+        $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+            ->withData( array(  'text' =>  'Game ' . $game->key . ' has started. White moves.',
+                                'facebookIds' => $facebookIds,
+                                'slackIds' => $slackIds ) )
+            ->asJson( true )
+            ->post();
+
 
     }
 
@@ -329,12 +337,21 @@ class HomeController extends Controller
             if(Team::find($game->turn)->color == 'w')
                 $color = 'white\'s';
 
-            return response()->json([
-                'text' => 'It\'s ' . $color . ' turn.',
-                'facebookIds' => $facebookIds,
-                'slackIds' => $slackIds,
-                'image' => $path,
-            ]);
+
+            $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+            ->withData( array(  'text' => 'It\'s ' . $color . ' turn.' ,
+                                'facebookIds' => $facebookIds,
+                                'slackIds' => $slackIds,
+                                'image' => $path) )
+            ->asJson( true )
+            ->post();
+
+            // return response()->json([
+            //     'text' => 'It\'s ' . $color . ' turn.',
+            //     'facebookIds' => $facebookIds,
+            //     'slackIds' => $slackIds,
+            //     'image' => $path,
+            // ]);
         }
         else{
 
@@ -367,9 +384,9 @@ class HomeController extends Controller
 
 
 
-            return response()->json([
-                'text' => 'Vote added.',
-            ]);
+            // return response()->json([
+            //     'text' => 'Vote added.',
+            // ]);
         }
 
 
