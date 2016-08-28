@@ -15,15 +15,17 @@ class HomeController extends Controller
     public function action(Request $request)
     {
         \Log::info($request);
-        $name=  base_convert(mt_rand (1, 1125899906842623), 10, 32);
-        $path= public_path() . '\\' . $name . ".html";
+        $name= base_convert(mt_rand (1, 1125899906842623), 10, 32) . ".html";
+        $path= public_path() . '\\' . $name;
         $myfile = fopen($path, "w") or die("Unable to open file!");
         fwrite($myfile, $this->generateGrid());
         fclose($myfile);
 
+        chmod($path, 0777);
+
 
         return response()->json([
-            'path' => url('/public' . "/" . $name . ".html"),
+            'path' => url("/" . $name ),
         ]);
 
     }
