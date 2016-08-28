@@ -231,7 +231,8 @@ class HomeController extends Controller
 
         $movement=Movement::create(["move"=>$key, "game_id" => $game->id, "user_id" => $user->id, "team_id"=>$teamToPlay->id]);
         $votes=Movement::where("game_id", $game->id)->where("team_id", $teamToPlay->id)->get();
-        if($votes->count()>=(TeamUser::where("team_id", $teamToPlay->id)->get()->count() / 2))
+        if($votes->count()>(TeamUser::where("team_id", $teamToPlay->id)->get()->count() / 2)
+        ||( $votes->count()==1 && TeamUser::where("team_id", $teamToPlay->id)->get()->count() / 2)==1  )
         {
             $movesVotes=[];
             foreach ($votes as $vote) {
