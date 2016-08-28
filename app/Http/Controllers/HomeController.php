@@ -277,7 +277,7 @@ class HomeController extends Controller
         <script>
 
             var x = document.getElementsByTagName(\"html\")[0];
-            var y = document.getElementsByTagName(\"body\")[0];
+            var y = document.getElementsByTagName(\"table\")[0];
             x.style.height = y.clientHeight;
             x.style.width = y.clientWidth;
         </script>
