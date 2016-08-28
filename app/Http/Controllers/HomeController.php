@@ -255,6 +255,7 @@ class HomeController extends Controller
             \Log::info('move===' . $chess->move($higherMove));
             \Log::info('fen===' . $chess->fen());
 
+            $chess->move('e4');
             $game->fen=$chess->fen();
             $game->turn=$this->switchTurn($game);
             $game->save();
