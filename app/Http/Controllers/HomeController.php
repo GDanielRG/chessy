@@ -150,7 +150,7 @@ class HomeController extends Controller
                 'text' => 'Game does not exists',
             ]);
 
-        if($game->started || $game->ended)
+        if($game->started || $game->ended || $game->creator != $user->id)
         return response()->json([
             'text' => 'Game cannot start',
         ]);
@@ -158,8 +158,8 @@ class HomeController extends Controller
         $game->started=true;
         $game->save();
 
-        $black=Team::where('id', $game->team1)->first();
-        $white=Team::where('id', $game->team2)->first();
+        $black=Team::where('id', $game->team_id1)->first();
+        $white=Team::where('id', $game->team_id2)->first();
 
         $teamUsers=teamUser::where("team_id", $black->id)->orWhere("team_id", $white->id)->get();
         $users=User::whereIn("id", $teamUsers->pluck('id'))->get();
