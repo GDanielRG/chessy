@@ -117,8 +117,8 @@ class HomeController extends Controller
                 'text' => 'Game does not exists',
             ]);
 
-        $black=Team::where('id' , $game->team1)->first();
-        $white=Team::where('id' , $game->team2)->first();
+        $black=Team::where('id' , $game->team_id1)->first();
+        $white=Team::where('id' , $game->team_id2)->first();
 
         if($key != "black" && $key != "white")
         return response()->json([
