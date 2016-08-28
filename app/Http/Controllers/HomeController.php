@@ -532,39 +532,26 @@ class HomeController extends Controller
         		if(is_numeric($fentable[$i][$j])){
         			$rest -= ($fentable[$i][$j]-1);
         			for($k = 0; $k < $fentable[$i][$j]; $k++){
-        				if($i%2==0){
-        					if(($j+$k)%2==0){
-        						$c = "w";
-        					}else{
-        						$c = "b";
-        					}
-        				}else{
-        					if(($j+$k)%2==0){
-        						$c = "b";
-        					}else{
-        						$c = "w";
-        					}
+        				if($squarecont%2==0){
+    						$c = "w";
+    					}else{
+    						$c = "b";
         				}
+                        $squarecont++;
         				$htmlcontent .= '<td class="'. $c . '"></td>';
         			}
         		} else{
-        			if($i%2==0){
-        				if($j%2==0){
-        					$c = "w";
-        				}else{
-        					$c = "b";
-        				}
-        			}else{
-        				if($j%2==0){
-        					$c = "b";
-        				}else{
-        					$c = "w";
-        				}
-        			}
+                    if($squarecont%2==0){
+                        $c = "w";
+                    }else{
+                        $c = "b";
+                    }
+                    $squarecont++;
         			$htmlcontent .= '<td class="'. $c . '">' . $this->pieceSwitch($fentable[$i][$j]) . "</td>";
         		}
         	}
         	$htmlcontent .= "</tr>";
+            $squarecont--;
         }
         $htmlcontent .= "<tr><td></td>";
 for ($i = 0; $i < 8; $i++) {
