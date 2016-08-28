@@ -274,13 +274,7 @@ class HomeController extends Controller
         td.w{
         background-color:#CBA987;
         }</style>
-        <script>
 
-            var x = document.getElementsByTagName(\"html\")[0];
-            var y = document.getElementsByTagName(\"table\")[0];
-            x.style.height = y.clientHeight;
-            x.style.width = y.clientWidth;
-        </script>
         ";
 
         $fentable = explode("/", $fenstr);
@@ -327,7 +321,13 @@ class HomeController extends Controller
         	}
         	$htmlcontent .= "</tr>";
         }
-        $htmlcontent .= "</table>";
+        $htmlcontent .= "</table> <script>
+
+            var x = document.getElementsByTagName(\"html\")[0];
+            var y = document.getElementsByTagName(\"table\")[0];
+            x.style.height = y.clientHeight;
+            x.style.width = y.clientWidth;
+        </script>";
 
         return $htmlcontent;
     }
