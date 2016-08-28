@@ -85,7 +85,7 @@ class HomeController extends Controller
         $chess = new Chess();
         $fen= $chess->fen();
 
-        $game = Game::create(["fen"=>$fen,"creator"=>$user->id, "team_id1" => $team1->id, "team_id2" => $team2->id, "key"=> base_convert(mt_rand (1, 1125899906842623), 10, 32)]);
+        $game = Game::create(["fen"=>$fen,"creator"=>$user->id, "team_id1" => $team1->id, "team_id2" => $team2->id, "turn" => $team2->id, "key"=> base_convert(mt_rand (1, 1125899906842623), 10, 32)]);
         $user->active_game = $game->id;
 
         $lobbyUser = LobbyUser::create(["user_id"=> $user->id, "game_id" => $game->id]);
