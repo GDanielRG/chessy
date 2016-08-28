@@ -16,10 +16,13 @@ class HomeController extends Controller
     {
         \Log::info($request);
         $name= base_convert(mt_rand (1, 1125899906842623), 10, 32) . ".html";
+        echo('name= ' . $name);
         $path= public_path() . '\\' . "images". '\\'. $name;
         $myfile = fopen($path, "w") or die("Unable to open file!");
         fwrite($myfile, $this->generateGrid());
         fclose($myfile);
+        echo('name 2= ' . $name);
+
 
         chmod($path, 0777);
 
