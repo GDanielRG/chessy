@@ -425,7 +425,7 @@ class HomeController extends Controller
         }
         $htmlcontent .= "<tr><td></td>";
 for ($i = 0; $i < 8; $i++) {
-	$htmlcontent .= '<td class="letter">' . getLetter($i) . "</td>";
+	$htmlcontent .= '<td class="letter">' . $this->getLetter($i) . "</td>";
 }
         $htmlcontent .= "</tr></table>";
 
