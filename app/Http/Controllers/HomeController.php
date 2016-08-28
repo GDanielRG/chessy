@@ -387,7 +387,7 @@ class HomeController extends Controller
         	$rest = 8;
         	for ($j = 0; $j < $rest; $j++) {
         		if(is_numeric($fentable[$i][$j])){
-        			$rest -= $fentable[$i][$j];
+        			$rest -= ($fentable[$i][$j]-1);
         			for($k = 0; $k < $fentable[$i][$j]; $k++){
         				if($i%2==0){
         					if(($j+$k)%2==0){
