@@ -26,14 +26,17 @@ class HomeController extends Controller
 
         if(substr($request->input('text'), 0, strlen('#register')) === "#register")
         {
-
             return $this->register($request);
         }
 
         if(substr($request->input('text'), 0, strlen('#create')) === "#create")
         {
-
             return $this->quickplay($request);
+        }
+
+        if(substr($request->input('text'), 0, strlen('#join')) === "#join")
+        {
+            return $this->join($request);
         }
 
         $path = $this->generateImagePath("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
@@ -44,22 +47,46 @@ class HomeController extends Controller
     }
 
     public function quickplay(Request $request){
-            $user=$this->getUser($request);
+        $user=$this->getUser($request);
 
-            if(!$user)
-                return response()->json([
-                    'text' => 'User needs to register again',
-                ]);
-
-            $team1 = Team::create(["key"=> base_convert(mt_rand (1, 1125899906842623), 10, 32), "color" => 'b']);
-            $team2 = Team::create(["key"=> base_convert(mt_rand (1, 1125899906842623), 10, 32), "color" => 'b']);
-            $game = Game::create(["creator"=>$user->id, "team_id1" => $team1->id, "team_id2" => $team2->id, "key"=> base_convert(mt_rand (1, 1125899906842623), 10, 32)]);
-            $user->active_game = $game->id;
-
-            $lobbyUser = LobbyUser::create(["user_id"=> $user->id, "game_id" => $game->id]);
+        if(!$user)
             return response()->json([
-                'text' => 'Game created. You are now on the lobby of the game ' . $game->key . " Your friends can join this game with #join {key}, and you can start picking a side with #side white or #side black",
+                'text' => 'User needs to register again',
             ]);
+
+        $team1 = Team::create(["key"=> base_convert(mt_rand (1, 1125899906842623), 10, 32), "color" => 'b']);
+        $team2 = Team::create(["key"=> base_convert(mt_rand (1, 1125899906842623), 10, 32), "color" => 'w']);
+        $game = Game::create(["creator"=>$user->id, "team_id1" => $team1->id, "team_id2" => $team2->id, "key"=> base_convert(mt_rand (1, 1125899906842623), 10, 32)]);
+        $user->active_game = $game->id;
+
+        $lobbyUser = LobbyUser::create(["user_id"=> $user->id, "game_id" => $game->id]);
+        return response()->json([
+            'text' => 'Game created. You are now on the lobby of the game ' . $game->key . " Your friends can join this game with #join {key}, and you can start picking a side with #side white or #side black",
+        ]);
+
+    }
+
+    public function join(Request $request){
+        $user=$this->getUser($request);
+        if(!$user)
+            return response()->json([
+                'text' => 'User needs to register again',
+            ]);
+        $text = $request->input('text');
+        $key= explode(" ", $text)[1];
+        $game=Game::where('key', $key)->first();
+
+        if(!$game)
+            return response()->json([
+                'text' => 'Game does not exists',
+            ]);
+
+        $lobbyUser = LobbyUser::create(["user_id"=> $user->id, "game_id" => $game->id]);
+        $user->active_game = $game->id;
+
+        return response()->json([
+            'text' => 'Game created. You are now on the lobby of the game ' . $game->key . " Your friends can join this game with #join {key}, and you can start picking a side with #side white or #side black",
+        ]);
 
     }
 
