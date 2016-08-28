@@ -74,10 +74,30 @@ class HomeController extends Controller
     public function quickplay(Request $request){
         $user=$this->getUser($request);
 
+        $slackIds=[];
+        $facebookIds=[];
+
+        if($request->has('facebook'))
+        {
+            $facebookIds[]=$request->input('facebook');
+        }
+
+        if($request->has('slack'))
+        {
+            $slackIds[]=$request->input('slack');
+        }
+
         if(!$user)
-            return response()->json([
-                'text' => 'User needs to register again',
-            ]);
+            // return response()->json([
+            //     'text' => 'User needs to register again',
+            // ]);
+
+            $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+            ->withData( array(  'text' =>  'User needs to register again',
+                                'facebookIds' => $facebookIds,
+                                'slackIds' => $slackIds ) )
+            ->asJson( true )
+            ->post();
 
         $team1 = Team::create(["key"=> base_convert(mt_rand (1, 1125899906842623), 10, 32), "color" => 'b']);
         $team2 = Team::create(["key"=> base_convert(mt_rand (1, 1125899906842623), 10, 32), "color" => 'w']);
@@ -92,18 +112,6 @@ class HomeController extends Controller
 
         $lobbyUser = LobbyUser::create(["user_id"=> $user->id, "game_id" => $game->id]);
 
-        $slackIds=[];
-        $facebookIds=[];
-
-        if($request->has('facebook'))
-        {
-            $facebookIds[]=$request->input('facebook');
-        }
-
-        if($request->has('slack'))
-        {
-            $slackIds[]=$request->input('slack');
-        }
 
         $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
         ->withData( array(  'text' =>  'Game created. You are now on the lobby of the game ' . $game->key . " Your friends can join this game with #join {key}, and you can start picking a side with #side white or #side black",
@@ -120,18 +128,46 @@ class HomeController extends Controller
 
     public function join(Request $request){
         $user=$this->getUser($request);
+
+        $slackIds=[];
+        $facebookIds=[];
+
+        if($request->has('facebook'))
+        {
+            $facebookIds[]=$request->input('facebook');
+        }
+
+        if($request->has('slack'))
+        {
+            $slackIds[]=$request->input('slack');
+        }
+
         if(!$user)
-            return response()->json([
-                'text' => 'User needs to register again',
-            ]);
+            // return response()->json([
+            //     'text' => 'User needs to register again',
+            // ]);
+
+            $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+            ->withData( array(  'text' =>  'User needs to register again',
+                                'facebookIds' => $facebookIds,
+                                'slackIds' => $slackIds ) )
+            ->asJson( true )
+            ->post();
         $text = $request->input('text');
         $key= explode(" ", $text)[1];
         $game=Game::where('key', $key)->first();
 
         if(!$game)
-            return response()->json([
-                'text' => 'Game does not exists',
-            ]);
+            // return response()->json([
+            //     'text' => 'Game does not exists',
+            // ]);
+
+            $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+            ->withData( array(  'text' =>  'Game does not exists',
+                                'facebookIds' => $facebookIds,
+                                'slackIds' => $slackIds ) )
+            ->asJson( true )
+            ->post();
 
         $lobbyUser = LobbyUser::firstOrCreate(["user_id"=> $user->id, "game_id" => $game->id]);
         $user->active_game = $game->id;
@@ -169,10 +205,30 @@ class HomeController extends Controller
 
     public function side(Request $request){
         $user=$this->getUser($request);
+
+        $slackIds=[];
+        $facebookIds=[];
+
+        if($request->has('facebook'))
+        {
+            $facebookIds[]=$request->input('facebook');
+        }
+
+        if($request->has('slack'))
+        {
+            $slackIds[]=$request->input('slack');
+        }
+
         if(!$user)
-            return response()->json([
-                'text' => 'User needs to register again',
-            ]);
+            // return response()->json([
+            //     'text' => 'User needs to register again',
+            // ]);
+            $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+            ->withData( array(  'text' =>  'User needs to register again',
+                                'facebookIds' => $facebookIds,
+                                'slackIds' => $slackIds ) )
+            ->asJson( true )
+            ->post();
         $text = $request->input('text');
         $key= explode(" ", $text)[1];
         $game=Game::where('id', $user->active_game)->first();
@@ -186,9 +242,16 @@ class HomeController extends Controller
         $white=Team::where('id' , $game->team_id2)->first();
 
         if($key != "black" && $key != "white")
-        return response()->json([
-            'text' => 'Bad side',
-        ]);
+        // return response()->json([
+        //     'text' => 'Bad side',
+        // ]);
+        $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+        ->withData( array(  'text' =>  'Bad side',
+                            'facebookIds' => $facebookIds,
+                            'slackIds' => $slackIds ) )
+        ->asJson( true )
+        ->post();
+
         if($key == "black")
             $teamUser= TeamUser::firstOrCreate(["team_id"=>$black->id,
             "user_id" => $user->id]);
@@ -230,21 +293,53 @@ class HomeController extends Controller
 
     public function start(Request $request){
         $user=$this->getUser($request);
+
+        $slackIds=[];
+        $facebookIds=[];
+
+        if($request->has('facebook'))
+        {
+            $facebookIds[]=$request->input('facebook');
+        }
+
+        if($request->has('slack'))
+        {
+            $slackIds[]=$request->input('slack');
+        }
+
         if(!$user)
-            return response()->json([
-                'text' => 'User needs to register again',
-            ]);
+            // return response()->json([
+            //     'text' => 'User needs to register again',
+            // ]);
+            $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+                ->withData( array(  'text' =>  'User needs to register again',
+                                    'facebookIds' => $facebookIds,
+                                    'slackIds' => $slackIds ) )
+                ->asJson( true )
+                ->post();
         $game=Game::where('id', $user->active_game)->first();
 
         if(!$game)
-            return response()->json([
-                'text' => 'Game does not exists',
-            ]);
+            // return response()->json([
+            //     'text' => 'Game does not exists',
+            // ]);
+            $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+                ->withData( array(  'text' =>  'Game does not exists',
+                                    'facebookIds' => $facebookIds,
+                                    'slackIds' => $slackIds ) )
+                ->asJson( true )
+                ->post();
 
         if($game->started || $game->ended || $game->creator != $user->id)
-        return response()->json([
-            'text' => 'Game cannot start',
-        ]);
+        // return response()->json([
+        //     'text' => 'Game cannot start',
+        // ]);
+        $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+            ->withData( array(  'text' =>  'Game cannot start',
+                                'facebookIds' => $facebookIds,
+                                'slackIds' => $slackIds ) )
+            ->asJson( true )
+            ->post();
 
         $game->started=true;
         $game->save();
@@ -282,22 +377,52 @@ class HomeController extends Controller
 
     public function move(Request $request){
         $user=$this->getUser($request);
+        $slackIds=[];
+        $facebookIds=[];
+
+        if($request->has('facebook'))
+        {
+            $facebookIds[]=$request->input('facebook');
+        }
+
+        if($request->has('slack'))
+        {
+            $slackIds[]=$request->input('slack');
+        }
         if(!$user)
-            return response()->json([
-                'text' => 'User needs to register again',
-            ]);
+            // return response()->json([
+            //     'text' => 'User needs to register again',
+            // ]);
+            $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+                ->withData( array(  'text' =>  'User needs to register again',
+                                    'facebookIds' => $facebookIds,
+                                    'slackIds' => $slackIds ) )
+                ->asJson( true )
+                ->post();
         $game=Game::where('id', $user->active_game)->first();
 
         if(!$game)
-            return response()->json([
-                'text' => 'Game does not exists',
-            ]);
+            // return response()->json([
+            //     'text' => 'Game does not exists',
+            // ]);
+            $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+                ->withData( array(  'text' =>  'Game does not exists',
+                                    'facebookIds' => $facebookIds,
+                                    'slackIds' => $slackIds ) )
+                ->asJson( true )
+                ->post();
 
         $teamToPlay= Team::find($game->turn);
         if($this->playerColor($game, $user) != $teamToPlay->color)
-        return response()->json([
-            'text' => 'Cannot move',
-        ]);
+        // return response()->json([
+        //     'text' => 'Cannot move',
+        // ]);
+        $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+            ->withData( array(  'text' =>  'Cannot move',
+                                'facebookIds' => $facebookIds,
+                                'slackIds' => $slackIds ) )
+            ->asJson( true )
+            ->post();
 
         $text = $request->input('text');
         $key= explode(" ", $text)[1];
@@ -305,9 +430,15 @@ class HomeController extends Controller
         $chess = new Chess;
         $chess->load($game->fen);
         if(!in_array($key, $chess->moves()))
-        return response()->json([
-            'text' => 'Invalid move',
-        ]);
+        // return response()->json([
+        //     'text' => 'Invalid move',
+        // ]);
+        $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+            ->withData( array(  'text' =>  'Invalid move',
+                                'facebookIds' => $facebookIds,
+                                'slackIds' => $slackIds ) )
+            ->asJson( true )
+            ->post();
 
         $movement=Movement::create(["move"=>$key, "game_id" => $game->id, "user_id" => $user->id, "team_id"=>$teamToPlay->id]);
         $votes=Movement::where("game_id", $game->id)->where("team_id", $teamToPlay->id)->get();
@@ -417,6 +548,18 @@ class HomeController extends Controller
         $text = $request->input('text');
         $key= explode(" ", $text)[1];
         $user=User::where('key', $key)->first();
+        $slackIds=[];
+        $facebookIds=[];
+
+        if($request->has('facebook'))
+        {
+            $facebookIds[]=$request->input('facebook');
+        }
+
+        if($request->has('slack'))
+        {
+            $slackIds[]=$request->input('slack');
+        }
 
         if($user)
         {
@@ -431,9 +574,15 @@ class HomeController extends Controller
 
             $user->save();
 
-            return response()->json([
-                'text' => 'User added to' . $key
-            ]);
+            // return response()->json([
+            //     'text' => 'User added to' . $key
+            // ]);
+            $response = \Curl::to('peaceful-badlands-59453.herokuapp.com/send')
+                ->withData( array(  'text' =>  'User added to ' . $key,
+                                    'facebookIds' => $facebookIds,
+                                    'slackIds' => $slackIds ) )
+                ->asJson( true )
+                ->post();
         }
         else{
 
