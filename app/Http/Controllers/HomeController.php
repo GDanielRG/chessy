@@ -94,6 +94,7 @@ class HomeController extends Controller
 
         $lobbyUser = LobbyUser::firstOrCreate(["user_id"=> $user->id, "game_id" => $game->id]);
         $user->active_game = $game->id;
+        $user->save();
 
         return response()->json([
             'text' => 'You are now on the lobby of the game ' . $game->key . " Your friends can join this game with #join {key}, and you can start picking a side with #side white or #side black",
