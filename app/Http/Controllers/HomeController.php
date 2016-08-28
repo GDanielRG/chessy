@@ -273,7 +273,15 @@ class HomeController extends Controller
         }
         td.w{
         background-color:#CBA987;
-        }</style>";
+        }</style>
+        <script>
+
+            var x = document.getElementsByTagName(\"html\")[0];
+            var y = document.getElementsByTagName(\"body\")[0];
+            x.style.height = y.clientHeight;
+            x.style.width = y.clientWidth;
+        </script>
+        ";
 
         $fentable = explode("/", $fenstr);
         $squarecont = 0;
