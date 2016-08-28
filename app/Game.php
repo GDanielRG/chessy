@@ -13,7 +13,7 @@ class Game extends Model
      * @var array
      */
     protected $fillable = [
-        'creator', 'team_id1', 'team_id2', 'turn', 'ended', 'started', 'key'
+        'creator', 'team_id1', 'team_id2', 'turn', 'ended', 'started', 'key', 'fen'
     ];
 
     public function teams(){

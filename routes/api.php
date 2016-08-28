@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Ryanhs\Chess\Chess;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,4 +15,9 @@ use Illuminate\Http\Request;
 */
 
 Route::any('/', 'HomeController@action');
+Route::any('/test', function(){
+    $chess = new Chess();
+    $moves = $chess->moves();
+    dd($moves);
+});
 Route::post('/images', 'HomeController@createImage');

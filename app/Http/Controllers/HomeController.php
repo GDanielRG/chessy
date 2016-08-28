@@ -8,6 +8,8 @@ use App\Team;
 use App\Game;
 use App\LobbyUser;
 use App\TeamUser;
+use Ryanhs\Chess\Chess;
+
 
 class HomeController extends Controller
 {
@@ -56,6 +58,11 @@ class HomeController extends Controller
             return $this->start($request);
         }
 
+        if(substr($request->input('text'), 0, strlen('#move')) === "#move")
+        {
+            return $this->move($request);
+        }
+
         $path = $this->generateImagePath("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
 
         return response()->json([
@@ -73,7 +80,12 @@ class HomeController extends Controller
 
         $team1 = Team::create(["key"=> base_convert(mt_rand (1, 1125899906842623), 10, 32), "color" => 'b']);
         $team2 = Team::create(["key"=> base_convert(mt_rand (1, 1125899906842623), 10, 32), "color" => 'w']);
-        $game = Game::create(["creator"=>$user->id, "team_id1" => $team1->id, "team_id2" => $team2->id, "key"=> base_convert(mt_rand (1, 1125899906842623), 10, 32)]);
+
+
+        $chess = new Chess();
+        $fen= $chess->fen();
+
+        $game = Game::create(["fen"=>$fen,"creator"=>$user->id, "team_id1" => $team1->id, "team_id2" => $team2->id, "key"=> base_convert(mt_rand (1, 1125899906842623), 10, 32)]);
         $user->active_game = $game->id;
 
         $lobbyUser = LobbyUser::create(["user_id"=> $user->id, "game_id" => $game->id]);
@@ -187,6 +199,98 @@ class HomeController extends Controller
 
     }
 
+    public function move(Request $request){
+        $user=$this->getUser($request);
+        if(!$user)
+            return response()->json([
+                'text' => 'User needs to register again',
+            ]);
+        $game=Game::where('id', $user->active_game)->first();
+
+        if(!$game)
+            return response()->json([
+                'text' => 'Game does not exists',
+            ]);
+
+        $teamToPlay= Team::find($game->turn);
+        if(playerColor($game, $user) != $teamToPlay->color)
+        return response()->json([
+            'text' => 'Cannot move',
+        ]);
+
+        $text = $request->input('text');
+        $key= explode(" ", $text)[1];
+
+        $chess = new Chess;
+        $chess->load($game->fen);
+        if(!in_array($key, $chess->moves()))
+        return response()->json([
+            'text' => 'Invalid move',
+        ]);
+
+        $movement=Movement::create(["move"=>$key, "game_id" => $game->id, "user_id" => $user->id, "team_id"=>$teamToPlay->id]);
+        $votes=Movements::where("game_id", $game->id, "team_id", $teamToPlay->id)->get();
+        if($votes->count()>=(TeamUser::where("team_id")->get()->count / 2))
+        {
+            $movesVotes=[];
+            foreach ($votes as $vote) {
+                if(!array_key_exists($vote->move, $movesVotes)){
+                    $movesVotes["'". $vote->move ."'"] = 1;
+                }
+                else{
+                    $movesVotes["'".$vote->move."'"] = $movesVotes["'".$vote->move."'"] + 1;
+                }
+            }
+            $higher=0;
+            $higherMove="";
+            foreach ($movesVotes as $key => $value) {
+                if($value > $higher)
+                {
+                    $higherMove = $key;
+                }
+            }
+            $chess->move($higherMove);
+            $game->fen=$chess->fen();
+            $game->turn=switchTurn($game);
+            $game->save();
+
+            $black=Team::where('id', $game->team_id1)->first();
+            $white=Team::where('id', $game->team_id2)->first();
+
+            $teamUsers=teamUser::where("team_id", $black->id)->orWhere("team_id", $white->id)->get();
+            $users=User::whereIn("id", $teamUsers->pluck('id'))->get();
+            $facebookIds=[];
+            $slackIds=[];
+            foreach ($users as $user) {
+                if($user->facebook_key)
+                    $facebookIds[]=$user->facebook_key;
+                if($user->slack_key)
+                    $slackIds[]=$user->slack_key;
+            }
+
+            $path = $this->generateImagePath($game->fen);
+
+            if(Team::find($game->turn)->color == 'b')
+                $color = 'black\'s';
+            if(Team::find($game->turn)->color == 'w')
+                $color = 'white\'s';
+
+            return response()->json([
+                'text' => 'It\'s ' . $color . ' turn.',
+                'facebookIds' => $facebookIds,
+                'slackIds' => $slackIds,
+                'image' => $path,
+            ]);
+        }
+        else{
+            return response()->json([
+                'text' => 'Vote added.',
+            ]);
+        }
+
+
+    }
+
     public function register($request){
         $text = $request->input('text');
         $key= explode(" ", $text)[1];
@@ -260,7 +364,6 @@ class HomeController extends Controller
     public function generateGrid($fenstr){
         $fentable = explode("/", $fenstr);
         $htmlcontent =  "<style>
-        
         td {text-align: center;
         height: 50px;
         width: 50px;
@@ -363,6 +466,29 @@ class HomeController extends Controller
     			return "&#9823;";
     			break;
     	}
+    }
+
+
+    public function playerColor($game, $user)
+    {
+        $black=Team::where('id', $game->team_id1)->first();
+        $white=Team::where('id', $game->team_id2)->first();
+        $blackTeamUser= TeamUser::where("user_id", $user->id)->where("team_id", $black->id)->first();
+        $whiteTeamUser= TeamUser::where("user_id", $user->id)->where("team_id", $white->id)->first();
+
+        if($blackTeamUser)
+        return 'b';
+        return 'w';
+    }
+
+    public function switchTurn($game)
+    {
+        $black=Team::where('id', $game->team_id1)->first();
+        $white=Team::where('id', $game->team_id2)->first();
+
+        if($game->turn == $black->id)
+        return $white->id;
+        return $black->id;
     }
 
 }
